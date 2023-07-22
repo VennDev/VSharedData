@@ -28,7 +28,10 @@ inventory-players:
 ...
 ```
 
-# Example
+# How to setup?
+- Please create any folder with the name according to your preference.
+- Then create folders that help save player inventory and the worlds you need to download and plugins
+- Example:
 <img src="https://github.com/VennDev/VSharedData/blob/main/images/1.png" alt="VMiningSack" height="300" width="700" />
 <img src="https://github.com/VennDev/VSharedData/blob/main/images/2.png" alt="VMiningSack" height="300" width="700" />
 <img src="https://github.com/VennDev/VSharedData/blob/main/images/3.png" alt="VMiningSack" height="300" width="700" />
