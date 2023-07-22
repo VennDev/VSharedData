@@ -29,6 +29,6 @@ inventory-players:
 ```
 
 # Example
-<img src="https://github.com/VennDev/VSharedData/blob/main/images/1.png" alt="VMiningSack" height="300" width="300" />
-<img src="https://github.com/VennDev/VSharedData/blob/main/images/2.png" alt="VMiningSack" height="300" width="300" />
-<img src="https://github.com/VennDev/VSharedData/blob/main/images/3.png" alt="VMiningSack" height="300" width="300" />
+<img src="https://github.com/VennDev/VSharedData/blob/main/images/1.png" alt="VMiningSack" height="350" width="500" />
+<img src="https://github.com/VennDev/VSharedData/blob/main/images/2.png" alt="VMiningSack" height="350" width="500" />
+<img src="https://github.com/VennDev/VSharedData/blob/main/images/3.png" alt="VMiningSack" height="350" width="500" />
