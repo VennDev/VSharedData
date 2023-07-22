@@ -6,6 +6,9 @@
 - Save inventory player data for a network of servers that require shared player data.
 - Help your server network to share a worlds folder, plugins and inventory player.
 
+# Note
+- Note that this plugin cannot run plugins such as DEVirion and PocketMine-DevTools in the directory that you create to run its plugins.
+
 # Config
 ```
 ---
