@@ -27,3 +27,6 @@ inventory-players:
 
 ...
 ```
+
+# Example
+
