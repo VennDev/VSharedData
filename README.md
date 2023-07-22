@@ -4,6 +4,7 @@
 # Feature
 - Help your server network reduce memory consumption for the base that hosts them.
 - Save player inventory data for a network of servers that require shared player data.
+- Help your server network to share a worlds folder, plugins and player inventory.
 
 # Config
 ```
