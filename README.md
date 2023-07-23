@@ -1,5 +1,6 @@
 # VSharedData
 - One plugin for PocketMine-PMMP 5
+- It's both a plugin as well as a small management for your server network.
 
 # Feature
 - Help your server network reduce memory consumption for the base that hosts them.
