@@ -40,5 +40,5 @@ inventory-players:
 <img src="https://github.com/VennDev/VSharedData/blob/main/images/3.png" alt="VMiningSack" height="300" width="700" />
 
 # The exception 
-- When you go to the folder manager I have provided in this plugin directory. It will help you manage which server is running and running it.
+- When you go to the [folder manager](https://github.com/VennDev/VSharedData/tree/main/manager) I have provided in this plugin directory. It will help you manage which server is running and running it.
 - You can setup it in 2 .bat files that I left inside.
