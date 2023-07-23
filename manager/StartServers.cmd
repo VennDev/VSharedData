@@ -6,6 +6,7 @@ setlocal enabledelayedexpansion
 TITLE SharedData for PocketMine-PMMP Minecraft: Bedrock Edition
 cd /d %~dp0
 
+REM You should setup here
 set "PATHS=C:\Users\Nam\Desktop\PMMP1,C:\Users\Nam\Desktop\PMMP2"
 
 where /q powershell
