@@ -36,13 +36,13 @@ inventory-players:
 - Please create any folder with the name according to your preference.
 - Then create folders that help save player inventory and the worlds you need to download and plugins
 - Example:
-<img src="https://github.com/VennDev/VSharedData/blob/main/images/1.png" alt="VMiningSack" height="300" width="700" />
-<img src="https://github.com/VennDev/VSharedData/blob/main/images/2.png" alt="VMiningSack" height="300" width="700" />
-<img src="https://github.com/VennDev/VSharedData/blob/main/images/3.png" alt="VMiningSack" height="300" width="700" />
+<img src="https://github.com/VennDev/VSharedData/blob/main/images/1.png" alt="VMiningSack" height="300" width="750" />
+<img src="https://github.com/VennDev/VSharedData/blob/main/images/2.png" alt="VMiningSack" height="300" width="750" />
+<img src="https://github.com/VennDev/VSharedData/blob/main/images/3.png" alt="VMiningSack" height="300" width="750" />
 
 # The exception (This is a non-plugin item)
 - When you go to the [folder manager](https://github.com/VennDev/VSharedData/tree/main/manager) I have provided in this plugin directory. It will help you manage which server is running and running it.
 - You can setup it in 2 .bat files that I left inside.
 - Just support: windows & windows server
 - Example setup:
-<img src="https://github.com/VennDev/VSharedData/blob/main/images/4.png" alt="VMiningSack" height="300" width="700" />
+<img src="https://github.com/VennDev/VSharedData/blob/main/images/4.png" alt="VMiningSack" height="300" width="750" />
