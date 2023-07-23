@@ -68,3 +68,5 @@ echo.
 echo ---------------STARTED-----------------
 
 timeout /t 1 >nul
+
+exit 1
