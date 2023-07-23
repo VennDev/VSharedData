@@ -2,15 +2,15 @@
 - One plugin for PocketMine-PMMP 5
 - It's both a plugin as well as a small management for your server network.
 
-# Feature
+# Feature (Plugin)
 - Help your server network reduce memory consumption for the base that hosts them.
 - Save inventory player data for a network of servers that require shared player data.
 - Help your server network to share a worlds folder, plugins and inventory player.
 
-# Note
+# Note (Plugin)
 - Note that this plugin cannot run plugins such as DEVirion and PocketMine-DevTools in the directory that you create to run its plugins.
 
-# Config
+# Config (Plugin)
 ```
 ---
 
@@ -32,7 +32,7 @@ inventory-players:
 ...
 ```
 
-# How to setup?
+# How to setup? (Plugin)
 - Please create any folder with the name according to your preference.
 - Then create folders that help save player inventory and the worlds you need to download and plugins
 - Example:
