@@ -36,7 +36,7 @@ inventory-players:
 ```
 
 # How to setup? (Plugin)
-- Please create any folder with the name according to your preference.
+- Please create any folder with the name according to your preference and reset the settings in the data-folder of this plugin.
 
 # Methods (Plugin)
 - You can load the world on another server, but only one server can load it.
