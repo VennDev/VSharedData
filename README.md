@@ -20,6 +20,9 @@ worlds-path: 'C:\Users\Nam\Desktop\SharedData\worlds'
 # Plugins path
 plugins-path: 'C:\Users\Nam\Desktop\SharedData\plugins'
 
+# Data Plugin path
+data-plugin-path: 'C:\Users\Nam\Desktop\SharedData\data-plugin'
+
 # Inventory players
 inventory-players:
 
@@ -34,12 +37,6 @@ inventory-players:
 
 # How to setup? (Plugin)
 - Please create any folder with the name according to your preference.
-- Then create folders that help save player inventory and the worlds you need to download and plugins
-- Example:
-<img src="https://github.com/VennDev/VSharedData/blob/main/images/1.png" alt="VMiningSack" height="300" width="750" />
-<img src="https://github.com/VennDev/VSharedData/blob/main/images/2.png" alt="VMiningSack" height="300" width="750" />
-<img src="https://github.com/VennDev/VSharedData/blob/main/images/3.png" alt="VMiningSack" height="300" width="750" />
-- Video setup: https://youtu.be/han5XgF2Ts0
 
 # Methods (Plugin)
 - You can load the world on another server, but only one server can load it.
@@ -58,6 +55,18 @@ if (VSharedData::isWorldLoaded('IslandPlayerA')) {
 }
 ```
 - With this, you can handle a server with a large network of managing worlds easily.
+- You want to manage a plugin data folder of that plugin ?
+```php
+# Let's do the same as if you used the saveDefaultConfig() method in the PocketMine API
+protected function onEnable(): void {
+  SharedData::saveDefaultConfigPlugin($this);
+}
+
+# You want getConfig()
+public function getConfigPlugin(): ?Config {
+  return SharedData::getConfigPlugin($this);
+}
+```
 
 # The exception (This is a non-plugin item)
 - When you go to the [folder manager](https://github.com/VennDev/VSharedData/tree/main/manager) I have provided in this plugin directory. It will help you manage which server is running and running it.
