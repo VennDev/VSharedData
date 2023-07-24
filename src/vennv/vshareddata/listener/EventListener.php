@@ -25,8 +25,6 @@ namespace vennv\vshareddata\listener;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerQuitEvent;
-use vennv\vapm\Async;
-use vennv\vshareddata\thread\GetInventory;
 use vennv\vshareddata\thread\SaveInventory;
 use vennv\vshareddata\thread\Threaded;
 use vennv\vshareddata\utils\InventoryPlayerUtil;
@@ -93,42 +91,7 @@ final class EventListener implements Listener
 				$player->getArmorInventory()->remove($item);
 			}
 
-			new Async(function() use ($uid, $player)
-			{
-				$thread = new GetInventory($uid);
-
-				Async::await($thread->start());
-
-				$contents = Threaded::getDataMainThread()[$uid]['contents'];
-
-				foreach (InventoryPlayerUtil::decodeContents($contents, InventoryPlayerUtil::ARMOR_TAG) as $itemData)
-				{
-					$data = InventoryPlayerUtil::decodeItem($itemData);
-
-					if ($data !== false)
-					{
-						$slot = $data['slot'];
-						$item = $data['item'];
-
-						$player->getArmorInventory()->setItem($slot, $item);
-					}
-				}
-
-				foreach (InventoryPlayerUtil::decodeContents($contents, InventoryPlayerUtil::INVENTORY_TAG) as $itemData)
-				{
-					$data = InventoryPlayerUtil::decodeItem($itemData);
-
-					if ($data !== false)
-					{
-						$slot = $data['slot'];
-						$item = $data['item'];
-
-						$player->getInventory()->setItem($slot, $item);
-					}
-				}
-
-				unset(Threaded::getDataMainThread()[$uid]);
-			});
+			InventoryPlayerUtil::processInventory($uid, $player);
 		}
 	}
 

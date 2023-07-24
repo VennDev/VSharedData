@@ -24,7 +24,9 @@ namespace vennv\vshareddata;
 
 use pocketmine\plugin\PluginBase;
 use pocketmine\event\Listener;
+use pocketmine\utils\TextFormat;
 use pocketmine\world\format\io\WorldProviderManager;
+use pocketmine\world\World;
 use pocketmine\world\WorldManager;
 use vennv\vapm\VapmPMMP;
 use vennv\vshareddata\listener\EventListener;
@@ -54,13 +56,12 @@ final class VSharedData extends PluginBase implements Listener
 
 		self::$worldManager = new WorldManager($this->getServer(), self::getWorldsPath(), new WorldProviderManager());
 
+        $this->getLogger()->info(TextFormat::AQUA . 'We have worlds:');
+
 		foreach (glob(self::getWorldsPath() . '/*', GLOB_ONLYDIR) as $worldPath)
 		{
 			$worldName = basename($worldPath);
-
-			self::$worldManager->loadWorld($worldName);
-
-			$this->getLogger()->info("Loaded world $worldName");
+			$this->getLogger()->info(' - ' . TextFormat::GREEN . $worldName);
 		}
 
 		foreach (glob(self::getPluginsPath() . '/*.phar') as $pluginPath)
@@ -83,6 +84,27 @@ final class VSharedData extends PluginBase implements Listener
 	{
 		return self::$worldManager;
 	}
+
+    public static function getWorlds(): array
+    {
+        return glob(self::getWorldsPath() . '/*', GLOB_ONLYDIR);
+    }
+
+	/*
+	 * This function, if you load world, may throw an error
+	 * 'world could not be loaded because it was locked and loaded in another server.'
+	 *
+	 * You can perform the test to do the job that you want.
+	 */
+    public static function loadWorld(string $worldName): bool
+    {
+        return self::getWorldManager()->loadWorld($worldName);
+    }
+
+    public static function unloadWorld(World $world): bool
+    {
+        return self::getWorldManager()->unloadWorld($world);
+    }
 
 	public static function getWorldsPath(): string
 	{

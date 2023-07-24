@@ -26,6 +26,10 @@ use Generator;
 use InvalidArgumentException;
 use pocketmine\item\Item;
 use pocketmine\player\Player;
+use Throwable;
+use vennv\vapm\Async;
+use vennv\vshareddata\thread\GetInventory;
+use vennv\vshareddata\thread\Threaded;
 use function count;
 use function explode;
 use function strpos;
@@ -129,6 +133,49 @@ final class InventoryPlayerUtil
 				yield $result;
 			}
 		}
+	}
+
+	/**
+	 * @throws Throwable
+	 */
+	public static function processInventory(string $uid, Player $player): Async
+	{
+		return new Async(function() use ($uid, $player)
+		{
+			$thread = new GetInventory($uid);
+
+			Async::await($thread->start());
+
+			$contents = Threaded::getDataMainThread()[$uid]['contents'];
+
+			foreach (InventoryPlayerUtil::decodeContents($contents, InventoryPlayerUtil::ARMOR_TAG) as $itemData)
+			{
+				$data = InventoryPlayerUtil::decodeItem($itemData);
+
+				if ($data !== false)
+				{
+					$slot = $data['slot'];
+					$item = $data['item'];
+
+					$player->getArmorInventory()->setItem($slot, $item);
+				}
+			}
+
+			foreach (InventoryPlayerUtil::decodeContents($contents, InventoryPlayerUtil::INVENTORY_TAG) as $itemData)
+			{
+				$data = InventoryPlayerUtil::decodeItem($itemData);
+
+				if ($data !== false)
+				{
+					$slot = $data['slot'];
+					$item = $data['item'];
+
+					$player->getInventory()->setItem($slot, $item);
+				}
+			}
+
+			unset(Threaded::getDataMainThread()[$uid]);
+		});
 	}
 
 }
