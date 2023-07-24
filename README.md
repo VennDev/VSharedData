@@ -39,6 +39,25 @@ inventory-players:
 <img src="https://github.com/VennDev/VSharedData/blob/main/images/1.png" alt="VMiningSack" height="300" width="750" />
 <img src="https://github.com/VennDev/VSharedData/blob/main/images/2.png" alt="VMiningSack" height="300" width="750" />
 <img src="https://github.com/VennDev/VSharedData/blob/main/images/3.png" alt="VMiningSack" height="300" width="750" />
+- Video setup: https://youtu.be/han5XgF2Ts0
+
+# Methods (Plugin)
+- You can load the world on another server, but only one server can load it.
+- You can logically handle them in a necessary way.
+- For example, I have 2 servers as below:
+```php
+# Server Skyblock A
+# Let's say I need to load a world for player A and teleport them to.
+if (VSharedData::loadWorld('IslandPlayerA')) {
+  //TODO: Your Logic
+}
+
+# This is when they leave the server or leave their world.
+if (VSharedData::isWorldLoaded('IslandPlayerA')) {
+  VSharedData::unloadWorld('IslandPlayerA'); //Stop loading the world to return it to another server that can use it if needed.
+}
+```
+- With this, you can handle a server with a large network of managing worlds easily.
 
 # The exception (This is a non-plugin item)
 - When you go to the [folder manager](https://github.com/VennDev/VSharedData/tree/main/manager) I have provided in this plugin directory. It will help you manage which server is running and running it.
