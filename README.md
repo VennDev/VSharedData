@@ -46,3 +46,4 @@ inventory-players:
 - Just support: windows & windows server
 - Example setup:
 <img src="https://github.com/VennDev/VSharedData/blob/main/images/4.png" alt="VMiningSack" height="300" width="750" />
+- Video setup: https://youtu.be/han5XgF2Ts0
