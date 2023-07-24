@@ -60,6 +60,10 @@ final class VSharedData extends PluginBase implements Listener
 
         $this->getLogger()->info(TextFormat::AQUA . 'We have worlds:');
 
+        self::createFolder(self::getWorldsPath());
+
+        self::createFolder(self::getPluginsPath());
+
 		foreach (glob(self::getWorldsPath() . '/*', GLOB_ONLYDIR) as $worldPath)
 		{
 			$worldName = basename($worldPath);
@@ -133,14 +137,28 @@ final class VSharedData extends PluginBase implements Listener
 		return self::getInstance()->getConfig()->getNested('inventory-players.path');
 	}
 
+    private static function createFolder(string $path): bool
+    {
+        if (!file_exists($path))
+        {
+            return mkdir($path, 0777, true);
+        }
+
+        return false;
+    }
+
     public static function getConfigPlugin(PluginBase $plugin): ?Config
     {
-        foreach (self::getInstance()->getServer()->getPluginManager()->getPlugins() as $pluginOnServer)
+        $dataPluginPath = self::getInstance()->getConfig()->get('data-plugin-path');
+
+        if (self::createFolder($dataPluginPath))
         {
-            if ($pluginOnServer->getName() === $plugin->getName())
+            foreach (self::getInstance()->getServer()->getPluginManager()->getPlugins() as $pluginOnServer)
             {
-                $dataPluginPath = self::getInstance()->getConfig()->get('data-plugin-path');
-                return new Config($dataPluginPath . DIRECTORY_SEPARATOR . $plugin->getName(), Config::YAML);
+                if ($pluginOnServer->getName() === $plugin->getName())
+                {
+                    return new Config($dataPluginPath . DIRECTORY_SEPARATOR . $plugin->getName(), Config::YAML);
+                }
             }
         }
 
@@ -152,15 +170,20 @@ final class VSharedData extends PluginBase implements Listener
      */
     public static function saveDefaultConfigPlugin(PluginBase $plugin): bool
     {
-        foreach (self::getInstance()->getServer()->getPluginManager()->getPlugins() as $pluginOnServer)
-        {
-            if ($pluginOnServer->getName() === $plugin->getName())
-            {
-                $dataPluginPath = self::getInstance()->getConfig()->get('data-plugin-path');
-                $config = new Config($dataPluginPath . DIRECTORY_SEPARATOR . $plugin->getName(), Config::YAML);
-                $config->save();
+        $dataPluginPath = self::getInstance()->getConfig()->get('data-plugin-path');
 
-                return true;
+        if (self::createFolder($dataPluginPath))
+        {
+            foreach (self::getInstance()->getServer()->getPluginManager()->getPlugins() as $pluginOnServer)
+            {
+                if ($pluginOnServer->getName() === $plugin->getName())
+                {
+                    $dataPluginPath = self::getInstance()->getConfig()->get('data-plugin-path');
+                    $config = new Config($dataPluginPath . DIRECTORY_SEPARATOR . $plugin->getName(), Config::YAML);
+                    $config->save();
+
+                    return true;
+                }
             }
         }
 
