@@ -22,8 +22,10 @@ declare(strict_types=1);
 
 namespace vennv\vshareddata;
 
+use JsonException;
 use pocketmine\plugin\PluginBase;
 use pocketmine\event\Listener;
+use pocketmine\utils\Config;
 use pocketmine\utils\TextFormat;
 use pocketmine\world\format\io\WorldProviderManager;
 use pocketmine\world\World;
@@ -130,5 +132,39 @@ final class VSharedData extends PluginBase implements Listener
 	{
 		return self::getInstance()->getConfig()->getNested('inventory-players.path');
 	}
+
+    public static function getConfigPlugin(PluginBase $plugin): ?Config
+    {
+        foreach (self::getInstance()->getServer()->getPluginManager()->getPlugins() as $pluginOnServer)
+        {
+            if ($pluginOnServer->getName() === $plugin->getName())
+            {
+                $dataPluginPath = self::getInstance()->getConfig()->get('data-plugin-path');
+                return new Config($dataPluginPath . DIRECTORY_SEPARATOR . $plugin->getName(), Config::YAML);
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @throws JsonException
+     */
+    public static function saveDefaultConfigPlugin(PluginBase $plugin): bool
+    {
+        foreach (self::getInstance()->getServer()->getPluginManager()->getPlugins() as $pluginOnServer)
+        {
+            if ($pluginOnServer->getName() === $plugin->getName())
+            {
+                $dataPluginPath = self::getInstance()->getConfig()->get('data-plugin-path');
+                $config = new Config($dataPluginPath . DIRECTORY_SEPARATOR . $plugin->getName(), Config::YAML);
+                $config->save();
+
+                return true;
+            }
+        }
+
+        return false;
+    }
 
 }
