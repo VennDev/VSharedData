@@ -72,6 +72,4 @@ public function getConfigPlugin(): ?Config {
 - When you go to the [folder manager](https://github.com/VennDev/VSharedData/tree/main/manager) I have provided in this plugin directory. It will help you manage which server is running and running it.
 - You can setup it in 2 .bat files that I left inside.
 - Just support: windows & windows server
-- Example setup:
-<img src="https://github.com/VennDev/VSharedData/blob/main/images/4.png" alt="VMiningSack" height="300" width="750" />
 - Video setup: https://youtu.be/han5XgF2Ts0
