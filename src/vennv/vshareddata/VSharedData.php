@@ -106,6 +106,11 @@ final class VSharedData extends PluginBase implements Listener
         return self::getWorldManager()->unloadWorld($world);
     }
 
+	public static function isWorldLoaded(string $worldName): bool
+	{
+		return self::getWorldManager()->isWorldLoaded($worldName);
+	}
+
 	public static function getWorldsPath(): string
 	{
 		return self::getInstance()->getConfig()->get('worlds-path');
