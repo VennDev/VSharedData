@@ -41,7 +41,7 @@ inventory-players:
 # Methods (Plugin)
 - You can load the world on another server, but only one server can load it.
 - You can logically handle them in a necessary way.
-- For example, I have 2 servers as below:
+- For example, I have 1 server as below:
 ```php
 # Server Skyblock A
 # Let's say I need to load a world for player A and teleport them to.
