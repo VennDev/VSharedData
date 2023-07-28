@@ -25,10 +25,9 @@ namespace vennv\vshareddata\listener;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerQuitEvent;
-use vennv\vshareddata\thread\SaveInventory;
-use vennv\vshareddata\thread\Threaded;
 use vennv\vshareddata\utils\InventoryPlayerUtil;
 use vennv\vshareddata\VSharedData;
+use vennv\vapm\Stream;
 use ReflectionException;
 use Throwable;
 use function basename;
@@ -61,26 +60,16 @@ final class EventListener implements Listener
 
 		if (!$hasData)
 		{
-			Threaded::addShared(
-				$uid,
-				[
-					"contents" => InventoryPlayerUtil::encodeContents($player),
-					"path" => VSharedData::getInventoryPlayersPath() . '/' . $uid . ".txt"
-				]
-			);
-
-			$thread = new SaveInventory($uid);
-			$thread->start();
+            if (!file_exists(VSharedData::getInventoryPlayersPath() . '/' . $uid . ".txt"))
+            {
+                Stream::overWrite(
+                    VSharedData::getInventoryPlayersPath() . '/' . $uid . ".txt",
+                    InventoryPlayerUtil::encodeContents($player)
+                );
+            }
 		}
 		else
 		{
-			Threaded::addShared(
-				$uid,
-				[
-					"path" => VSharedData::getInventoryPlayersPath() . '/' . $uid . ".txt"
-				]
-			);
-
 			foreach ($player->getInventory()->getContents() as $item)
 			{
 				$player->getInventory()->remove($item);
@@ -105,16 +94,10 @@ final class EventListener implements Listener
 
 		$uid = $player->getUniqueId()->toString();
 
-		Threaded::addShared(
-			$uid,
-			[
-				"contents" => InventoryPlayerUtil::encodeContents($player),
-				"path" => VSharedData::getInventoryPlayersPath() . '/' . $uid . ".txt"
-			]
-		);
-
-		$thread = new SaveInventory($uid);
-		$thread->start();
+        Stream::write(
+            VSharedData::getInventoryPlayersPath() . '/' . $uid . ".txt",
+            InventoryPlayerUtil::encodeContents($player)
+        );
 	}
 
 }

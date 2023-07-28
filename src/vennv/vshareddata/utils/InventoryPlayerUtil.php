@@ -28,8 +28,10 @@ use pocketmine\item\Item;
 use pocketmine\player\Player;
 use Throwable;
 use vennv\vapm\Async;
+use vennv\vapm\Stream;
 use vennv\vshareddata\thread\GetInventory;
 use vennv\vshareddata\thread\Threaded;
+use vennv\vshareddata\VSharedData;
 use function count;
 use function explode;
 use function strpos;
@@ -142,11 +144,7 @@ final class InventoryPlayerUtil
 	{
 		return new Async(function() use ($uid, $player)
 		{
-			$thread = new GetInventory($uid);
-
-			Async::await($thread->start());
-
-			$contents = Threaded::getDataMainThread()[$uid]['contents'];
+			$contents = Async::await(Stream::read(VSharedData::getInventoryPlayersPath() . '/' . $uid . '.txt'));
 
 			foreach (InventoryPlayerUtil::decodeContents($contents, InventoryPlayerUtil::ARMOR_TAG) as $itemData)
 			{
@@ -173,8 +171,6 @@ final class InventoryPlayerUtil
 					$player->getInventory()->setItem($slot, $item);
 				}
 			}
-
-			unset(Threaded::getDataMainThread()[$uid]);
 		});
 	}
 
