@@ -18,7 +18,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace vennv\vshareddata\listener;
 
@@ -32,72 +32,62 @@ use ReflectionException;
 use Throwable;
 use function basename;
 use function glob;
+use function file_exists;
 
-final class EventListener implements Listener
-{
+final class EventListener implements Listener {
 
-	/**
-	 * @throws ReflectionException
-	 * @throws Throwable
-	 */
-	public function onPlayerJoin(PlayerJoinEvent $event): void
-	{
-		$player = $event->getPlayer();
+    /**
+     * @throws ReflectionException
+     * @throws Throwable
+     */
+    public function onPlayerJoin(PlayerJoinEvent $event) : void {
+        $player = $event->getPlayer();
 
-		$uid = $player->getUniqueId()->toString();
+        $uid = $player->getUniqueId()->toString();
 
-		$hasData = false;
-		foreach (glob(VSharedData::getInventoryPlayersPath() . '/*.txt') as $fileName)
-		{
-			$playerUid = basename($fileName, '.txt');
+        $hasData = false;
+        foreach (glob(VSharedData::getInventoryPlayersPath() . '/*.txt') as $fileName) {
+            $playerUid = basename($fileName, '.txt');
 
-			if ($playerUid === $uid)
-			{
-				$hasData = true;
-				break;
-			}
-		}
+            if ($playerUid === $uid) {
+                $hasData = true;
+                break;
+            }
+        }
 
-		if (!$hasData)
-		{
-            if (!file_exists(VSharedData::getInventoryPlayersPath() . '/' . $uid . ".txt"))
-            {
+        if (!$hasData) {
+            if (!file_exists(VSharedData::getInventoryPlayersPath() . '/' . $uid . ".txt")) {
                 Stream::overWrite(
                     VSharedData::getInventoryPlayersPath() . '/' . $uid . ".txt",
                     InventoryPlayerUtil::encodeContents($player)
                 );
             }
-		}
-		else
-		{
-			foreach ($player->getInventory()->getContents() as $item)
-			{
-				$player->getInventory()->remove($item);
-			}
+        } else {
+            foreach ($player->getInventory()->getContents() as $item) {
+                $player->getInventory()->remove($item);
+            }
 
-			foreach ($player->getArmorInventory()->getContents() as $item)
-			{
-				$player->getArmorInventory()->remove($item);
-			}
+            foreach ($player->getArmorInventory()->getContents() as $item) {
+                $player->getArmorInventory()->remove($item);
+            }
 
-			InventoryPlayerUtil::processInventory($uid, $player);
-		}
-	}
+            InventoryPlayerUtil::processInventory($uid, $player);
+        }
+    }
 
-	/**
-	 * @throws ReflectionException
-	 * @throws Throwable
-	 */
-	public function onPlayerQuit(PlayerQuitEvent $event): void
-	{
-		$player = $event->getPlayer();
+    /**
+     * @throws ReflectionException
+     * @throws Throwable
+     */
+    public function onPlayerQuit(PlayerQuitEvent $event) : void {
+        $player = $event->getPlayer();
 
-		$uid = $player->getUniqueId()->toString();
+        $uid = $player->getUniqueId()->toString();
 
         Stream::write(
             VSharedData::getInventoryPlayersPath() . '/' . $uid . ".txt",
             InventoryPlayerUtil::encodeContents($player)
         );
-	}
+    }
 
 }

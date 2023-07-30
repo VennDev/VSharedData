@@ -18,7 +18,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace vennv\vshareddata;
 
@@ -30,33 +30,32 @@ use pocketmine\utils\TextFormat;
 use pocketmine\world\format\io\WorldProviderManager;
 use pocketmine\world\World;
 use pocketmine\world\WorldManager;
-use vennv\vapm\VapmPMMP;
 use vennv\vshareddata\listener\EventListener;
+use vennv\vapm\VapmPMMP;
 use function glob;
+use function basename;
+use function mkdir;
+use function file_exists;
 
-final class VSharedData extends PluginBase implements Listener
-{
+final class VSharedData extends PluginBase implements Listener {
 
-	private static VSharedData $instance;
+    private static VSharedData $instance;
 
-	private static WorldManager $worldManager;
+    private static WorldManager $worldManager;
 
-	public static function getInstance(): VSharedData
-	{
-		return self::$instance;
-	}
+    public static function getInstance() : VSharedData {
+        return self::$instance;
+    }
 
-	protected function onLoad(): void
-	{
-		self::$instance = $this;
-		$this->saveDefaultConfig();
-	}
+    protected function onLoad() : void {
+        self::$instance = $this;
+        $this->saveDefaultConfig();
+    }
 
-	protected function onEnable(): void
-	{
-		VapmPMMP::init($this);
+    protected function onEnable() : void {
+        VapmPMMP::init($this);
 
-		self::$worldManager = new WorldManager($this->getServer(), self::getWorldsPath(), new WorldProviderManager());
+        self::$worldManager = new WorldManager($this->getServer(), self::getWorldsPath(), new WorldProviderManager());
 
         $this->getLogger()->info(TextFormat::AQUA . 'We have worlds:');
 
@@ -64,99 +63,81 @@ final class VSharedData extends PluginBase implements Listener
 
         self::createFolder(self::getPluginsPath());
 
-		foreach (glob(self::getWorldsPath() . '/*', GLOB_ONLYDIR) as $worldPath)
-		{
-			$worldName = basename($worldPath);
-			$this->getLogger()->info(' - ' . TextFormat::GREEN . $worldName);
-		}
+        foreach (glob(self::getWorldsPath() . '/*', GLOB_ONLYDIR) as $worldPath) {
+            $worldName = basename($worldPath);
+            $this->getLogger()->info(' - ' . TextFormat::GREEN . $worldName);
+        }
 
-		foreach (glob(self::getPluginsPath() . '/*.phar') as $pluginPath)
-		{
-			$this->getServer()->getPluginManager()->loadPlugins($pluginPath);
-			$this->getServer()->getPluginManager()->enablePlugin(
-				$this->getServer()->getPluginManager()->getPlugin(basename($pluginPath, '.phar'))
-			);
-		}
+        foreach (glob(self::getPluginsPath() . '/*.phar') as $pluginPath) {
+            $this->getServer()->getPluginManager()->loadPlugins($pluginPath);
+            $this->getServer()->getPluginManager()->enablePlugin(
+                $this->getServer()->getPluginManager()->getPlugin(basename($pluginPath, '.phar'))
+            );
+        }
 
-		if ($this->isEnableInventoryPlayers())
-		{
-			$this->getLogger()->info('Loading players inventory...');
-		}
+        if ($this->isEnableInventoryPlayers()) {
+            $this->getLogger()->info('Loading players inventory...');
+        }
 
-		$this->getServer()->getPluginManager()->registerEvents(new EventListener(), $this);
-	}
+        $this->getServer()->getPluginManager()->registerEvents(new EventListener(), $this);
+    }
 
-	public static function getWorldManager(): WorldManager
-	{
-		return self::$worldManager;
-	}
+    public static function getWorldManager() : WorldManager {
+        return self::$worldManager;
+    }
 
-    public static function getWorlds(): array
-    {
+    public static function getWorlds() : array {
         return glob(self::getWorldsPath() . '/*', GLOB_ONLYDIR);
     }
 
-	/*
-	 * This function, if you load world, may throw an error
-	 * 'world could not be loaded because it was locked and loaded in another server.'
-	 *
-	 * You can perform the test to do the job that you want.
-	 */
-    public static function loadWorld(string $worldName): bool
-    {
+    /*
+     * This function, if you load world, may throw an error
+     * 'world could not be loaded because it was locked and loaded in another server.'
+     *
+     * You can perform the test to do the job that you want.
+     */
+    public static function loadWorld(string $worldName) : bool {
         return self::getWorldManager()->loadWorld($worldName);
     }
 
-    public static function unloadWorld(World $world): bool
-    {
+    public static function unloadWorld(World $world) : bool {
         return self::getWorldManager()->unloadWorld($world);
     }
 
-	public static function isWorldLoaded(string $worldName): bool
-	{
-		return self::getWorldManager()->isWorldLoaded($worldName);
-	}
+    public static function isWorldLoaded(string $worldName) : bool {
+        return self::getWorldManager()->isWorldLoaded($worldName);
+    }
 
-	public static function getWorldsPath(): string
-	{
-		return self::getInstance()->getConfig()->get('worlds-path');
-	}
+    public static function getWorldsPath() : string {
+        return self::getInstance()->getConfig()->get('worlds-path');
+    }
 
-	public static function getPluginsPath(): string
-	{
-		return self::getInstance()->getConfig()->get('plugins-path');
-	}
+    public static function getPluginsPath() : string {
+        return self::getInstance()->getConfig()->get('plugins-path');
+    }
 
-	public static function isEnableInventoryPlayers(): bool
-	{
-		return self::getInstance()->getConfig()->getNested('inventory-players.enable', false);
-	}
+    public static function isEnableInventoryPlayers() : bool {
+        return self::getInstance()->getConfig()->getNested('inventory-players.enable', false);
+    }
 
-	public static function getInventoryPlayersPath(): string
-	{
-		return self::getInstance()->getConfig()->getNested('inventory-players.path');
-	}
+    public static function getInventoryPlayersPath() : string {
+        return self::getInstance()->getConfig()->getNested('inventory-players.path');
+    }
 
-    private static function createFolder(string $path): bool
-    {
-        if (!file_exists($path))
-        {
+    private static function createFolder(string $path) : bool {
+        if (!file_exists($path)) {
             return mkdir($path, 0777, true);
         }
 
         return false;
     }
 
-    public static function getConfigPlugin(PluginBase $plugin): ?Config
-    {
+    public static function getConfigPlugin(PluginBase $plugin) : ?Config {
         $dataPluginPath = self::getInstance()->getConfig()->get('data-plugin-path');
 
-        if (self::createFolder($dataPluginPath))
-        {
-            foreach (self::getInstance()->getServer()->getPluginManager()->getPlugins() as $pluginOnServer)
-            {
-                if ($pluginOnServer->getName() === $plugin->getName())
-                {
+        if (self::createFolder($dataPluginPath)) {
+            foreach (self::getInstance()->getServer()->getPluginManager()->getPlugins() as $pluginOnServer) {
+                if ($pluginOnServer->getName() === $plugin->getName()) {
                     return new Config($dataPluginPath . DIRECTORY_SEPARATOR . $plugin->getName(), Config::YAML);
                 }
             }
@@ -168,16 +149,12 @@ final class VSharedData extends PluginBase implements Listener
     /**
      * @throws JsonException
      */
-    public static function saveDefaultConfigPlugin(PluginBase $plugin): bool
-    {
+    public static function saveDefaultConfigPlugin(PluginBase $plugin) : bool {
         $dataPluginPath = self::getInstance()->getConfig()->get('data-plugin-path');
 
-        if (self::createFolder($dataPluginPath))
-        {
-            foreach (self::getInstance()->getServer()->getPluginManager()->getPlugins() as $pluginOnServer)
-            {
-                if ($pluginOnServer->getName() === $plugin->getName())
-                {
+        if (self::createFolder($dataPluginPath)) {
+            foreach (self::getInstance()->getServer()->getPluginManager()->getPlugins() as $pluginOnServer) {
+                if ($pluginOnServer->getName() === $plugin->getName()) {
                     $dataPluginPath = self::getInstance()->getConfig()->get('data-plugin-path');
                     $config = new Config($dataPluginPath . DIRECTORY_SEPARATOR . $plugin->getName(), Config::YAML);
                     $config->save();
