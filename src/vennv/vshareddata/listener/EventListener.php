@@ -45,33 +45,35 @@ final class EventListener implements Listener {
 
         $uid = $player->getUniqueId()->toString();
 
-        $hasData = false;
-        foreach (glob(VSharedData::getInventoryPlayersPath() . '/*.txt') as $fileName) {
-            $playerUid = basename($fileName, '.txt');
+        if (VSharedData::isEnableInventoryPlayers()) {
+            $hasData = false;
+            foreach (glob(VSharedData::getInventoryPlayersPath() . '/*.txt') as $fileName) {
+                $playerUid = basename($fileName, '.txt');
 
-            if ($playerUid === $uid) {
-                $hasData = true;
-                break;
-            }
-        }
-
-        if (!$hasData) {
-            if (!file_exists(VSharedData::getInventoryPlayersPath() . '/' . $uid . ".txt")) {
-                Stream::overWrite(
-                    VSharedData::getInventoryPlayersPath() . '/' . $uid . ".txt",
-                    InventoryPlayerUtil::encodeContents($player)
-                );
-            }
-        } else {
-            foreach ($player->getInventory()->getContents() as $item) {
-                $player->getInventory()->remove($item);
+                if ($playerUid === $uid) {
+                    $hasData = true;
+                    break;
+                }
             }
 
-            foreach ($player->getArmorInventory()->getContents() as $item) {
-                $player->getArmorInventory()->remove($item);
-            }
+            if (!$hasData) {
+                if (!file_exists(VSharedData::getInventoryPlayersPath() . '/' . $uid . ".txt")) {
+                    Stream::overWrite(
+                        VSharedData::getInventoryPlayersPath() . '/' . $uid . ".txt",
+                        InventoryPlayerUtil::encodeContents($player)
+                    );
+                }
+            } else {
+                foreach ($player->getInventory()->getContents() as $item) {
+                    $player->getInventory()->remove($item);
+                }
 
-            InventoryPlayerUtil::processInventory($uid, $player);
+                foreach ($player->getArmorInventory()->getContents() as $item) {
+                    $player->getArmorInventory()->remove($item);
+                }
+
+                InventoryPlayerUtil::processInventory($uid, $player);
+            }
         }
     }
 
@@ -84,10 +86,12 @@ final class EventListener implements Listener {
 
         $uid = $player->getUniqueId()->toString();
 
-        Stream::write(
-            VSharedData::getInventoryPlayersPath() . '/' . $uid . ".txt",
-            InventoryPlayerUtil::encodeContents($player)
-        );
+        if (VSharedData::isEnableInventoryPlayers()) {
+            Stream::write(
+                VSharedData::getInventoryPlayersPath() . '/' . $uid . ".txt",
+                InventoryPlayerUtil::encodeContents($player)
+            );
+        }
     }
 
 }
