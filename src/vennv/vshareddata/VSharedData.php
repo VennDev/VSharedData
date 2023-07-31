@@ -22,7 +22,6 @@ declare(strict_types = 1);
 
 namespace vennv\vshareddata;
 
-use JsonException;
 use pocketmine\plugin\PluginBase;
 use pocketmine\event\Listener;
 use pocketmine\utils\Config;
@@ -30,8 +29,11 @@ use pocketmine\utils\TextFormat;
 use pocketmine\world\format\io\WorldProviderManager;
 use pocketmine\world\World;
 use pocketmine\world\WorldManager;
+use vennv\vapm\Promise;
 use vennv\vshareddata\listener\EventListener;
 use vennv\vapm\VapmPMMP;
+use Throwable;
+use JsonException;
 use function glob;
 use function basename;
 use function mkdir;
@@ -52,6 +54,9 @@ final class VSharedData extends PluginBase implements Listener {
         $this->saveDefaultConfig();
     }
 
+    /**
+     * @throws Throwable
+     */
     protected function onEnable() : void {
         VapmPMMP::init($this);
 
@@ -80,6 +85,8 @@ final class VSharedData extends PluginBase implements Listener {
         }
 
         $this->getServer()->getPluginManager()->registerEvents(new EventListener(), $this);
+
+        $this->doTick();
     }
 
     public static function getWorldManager() : WorldManager {
@@ -165,6 +172,18 @@ final class VSharedData extends PluginBase implements Listener {
         }
 
         return false;
+    }
+
+    /**
+     * @throws Throwable
+     */
+    private function doTick() : void {
+        Promise::c(function ($resolve) {
+            self::getWorldManager()->tick($this->getServer()->getTick());
+            $resolve();
+        })->then(function () {
+            $this->doTick();
+        });
     }
 
 }
