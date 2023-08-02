@@ -25,9 +25,12 @@ namespace vennv\vshareddata\listener;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerQuitEvent;
+use pocketmine\event\entity\EntityDamageByEntityEvent as EntityDamageByEntityEventPMMP;
+use vennv\vshareddata\event\EntityDamageByEntityEvent;
 use vennv\vshareddata\utils\InventoryPlayerUtil;
 use vennv\vshareddata\VSharedData;
 use vennv\vapm\Stream;
+use vennv\vapm\Promise;
 use Throwable;
 use ReflectionException;
 use function basename;
@@ -92,6 +95,16 @@ final class EventListener implements Listener {
                 InventoryPlayerUtil::encodeContents($player)
             );
         }
+    }
+
+    /**
+     * @throws Throwable
+     */
+    public function onEntityDamageByEntity(EntityDamageByEntityEventPMMP $event) : void {
+        Promise::c(function ($resolve) use ($event) {
+            $newEvent = new EntityDamageByEntityEvent($event->getDamager(), $event->getEntity(), $event->getCause(), $event->getBaseDamage(), $event->getModifiers());
+            $resolve($newEvent);
+        })->then(fn(EntityDamageByEntityEvent $event) => $event->call());
     }
 
 }
